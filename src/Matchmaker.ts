@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid'
+
 import { Player } from './Player'
 
 interface Match {
@@ -6,9 +8,12 @@ interface Match {
 }
 
 export class Matchmaker {
-	constructor(private players: Player[], private threshold: number) {}
+	private players: Player[] = []
+	public id: string = uuid()
+	constructor(private threshold: number) {}
 
 	public addPlayerToQueue(player: Player): void {
+		console.log({ players: this.players })
 		this.players.push(player)
 	}
 
