@@ -1,23 +1,21 @@
-import { Matchmaker, Player } from '../src'
+import { Matchmaker, Player, Queue } from '../src'
 
 describe('Matchmaker', () => {
 	test('should add new player to the queue', () => {
-		const matchmaker = new Matchmaker(100)
-		const player = new Player(1, 1000)
+		const queue = new Queue()
+		const player = new Player('1', 1000)
+		queue.addPlayersToQueue([player])
 
-		matchmaker.addPlayerToQueue(player)
-
-		expect(matchmaker.playersInQueue).toBe(1)
+		expect(queue.playersInQueue.length).toBe(1)
 	})
 
 	test('should find a match', () => {
-		const matchmaker = new Matchmaker(100)
-		const playerA = new Player(1, 1000)
-		const playerB = new Player(2, 1099)
+		const queue = new Queue()
+		const playerA = new Player('1', 1000)
+		const playerB = new Player('2', 1099)
+		const matchmaker = new Matchmaker(queue, 100, 1)
 
-		matchmaker.addPlayerToQueue(playerA)
-		matchmaker.addPlayerToQueue(playerB)
-
+		queue.addPlayersToQueue([playerA, playerB])
 		const match = matchmaker.findMatch()
 
 		expect(match).not.toBeNull()

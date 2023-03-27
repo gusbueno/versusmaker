@@ -1,56 +1,65 @@
 import { v4 as uuid } from 'uuid'
 
 import { Player } from './Player'
+import { Queue } from './Queue'
 
 interface Match {
+	id: string
 	teamA: Player[]
 	teamB: Player[]
+	isReady: boolean
 }
 
 export class Matchmaker {
-	private players: Player[] = []
-	public id: string = uuid()
-	constructor(private threshold: number) {}
+	public id: string = `matchmaker-${uuid()}`
+	private potentialMatches: Match[] = []
+	constructor(
+		private queue: Queue,
+		private threshold: number,
+		private teamSize: number
+	) {}
 
-	public addPlayerToQueue(player: Player): void {
-		console.log({ players: this.players })
-		this.players.push(player)
-	}
+	private createMatch(): Match | null {
+		const match: Match = {
+			id: `match-${uuid()}`,
+			teamA: [],
+			teamB: [],
+			isReady: false,
+		}
 
-	public get playersInQueue(): number {
-		return this.players.length
-	}
-
-	public findMatch(): Match | null {
-		let potentialMatches: Match[] = []
-
-		for (const playerA of this.players) {
-			for (const playerB of this.players) {
+		for (const playerA of this.queue.playersInQueue) {
+			for (const playerB of this.queue.playersInQueue) {
 				if (
 					playerA.id !== playerB.id &&
 					Math.abs(playerA.mmr - playerB.mmr) <= this.threshold
 				) {
-					const match: Match = {
-						teamA: [playerA],
-						teamB: [playerB],
-					}
-					potentialMatches.push(match)
+					match.teamA.push(playerA)
+					match.teamB.push(playerB)
+					this.queue.removePlayersFromQueue([playerA.id, playerB.id])
+					this.potentialMatches.push(match)
 				}
 			}
 		}
 
-		// Expand potential matches to include more players per team (up to 5)
-		potentialMatches = this.expandMatches(potentialMatches)
+		if (
+			match.teamA.length === this.teamSize &&
+			match.teamB.length === this.teamSize
+		) {
+			match.isReady = true
+			return match
+		}
 
-		// Return the first match found or null if no match is found
-		return potentialMatches.length > 0 ? potentialMatches[0] : null
+		this.potentialMatches.push(match)
+		return null
 	}
 
-	private expandMatches(potentialMatches: Match[]): Match[] {
-		const expandedMatches: Match[] = []
+	public findMatch(): Match | null {
+		if (this.potentialMatches.length === 0) {
+			return this.createMatch()
+		}
 
-		for (const match of potentialMatches) {
-			const unmatchedPlayers = this.players.filter(
+		for (const match of this.potentialMatches) {
+			const unmatchedPlayers = this.queue.playersInQueue.filter(
 				player =>
 					!match.teamA.includes(player) &&
 					!match.teamB.includes(player)
@@ -58,22 +67,28 @@ export class Matchmaker {
 
 			for (const unmatchedPlayer of unmatchedPlayers) {
 				if (
-					match.teamA.length < 5 &&
+					match.teamA.length < this.teamSize &&
 					this.isPlayerWithinThreshold(match.teamA, unmatchedPlayer)
 				) {
 					match.teamA.push(unmatchedPlayer)
 				} else if (
-					match.teamB.length < 5 &&
+					match.teamB.length < this.teamSize &&
 					this.isPlayerWithinThreshold(match.teamB, unmatchedPlayer)
 				) {
 					match.teamB.push(unmatchedPlayer)
 				}
 			}
 
-			expandedMatches.push(match)
+			if (
+				match.teamA.length === this.teamSize &&
+				match.teamB.length === this.teamSize
+			) {
+				match.isReady = true
+				return match
+			}
 		}
 
-		return expandedMatches
+		return null
 	}
 
 	private isPlayerWithinThreshold(team: Player[], player: Player): boolean {

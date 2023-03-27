@@ -27,11 +27,11 @@
 -   [Built Using](#built_with)
 -   [Authors](#authors)
 
-## About <a name="about"></a>
+## 📚 About <a name="about"></a>
 
 `versusmaker` is a simple matchmaker and easy-to-use nodejs library.
 
-## Getting Started <a name="getting_started"></a>
+## 🚀 Getting Started <a name="getting_started"></a>
 
 ### Install the package with npm
 
@@ -45,13 +45,13 @@ npm install --save versusmaker
 yarn add versusmaker
 ```
 
-## Usage <a name="usage"></a>
+## 🎬 Usage <a name="usage"></a>
 
-## Built with <a name="built_with"></a>
+## 🚧 Built with <a name="built_with"></a>
 
 -   [NodeJs](https://nodejs.org/en/)
 -   [uuid](https://github.com/uuidjs/uuid)
 
-## Authors <a name="authors"></a>
+## 🧑🏻‍💻👩🏻‍💻 Authors <a name="authors"></a>
 
 -   [@gusbueno](https://github.com/gusbueno)
