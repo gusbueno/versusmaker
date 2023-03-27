@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1-alpha",
+  "version": "0.1.2-alpha",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@gusbueno/versusmaker",
+  "name": "versusmaker",
   "author": "Gustavo Bueno",
   "module": "dist/versusmaker.esm.js",
   "size-limit": [
