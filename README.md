@@ -1,5 +1,12 @@
-#Versusmaker
-https://github.com/gusbueno/versusmaker/issues
+```text
+ __      ________ _____   _____ _    _  _____ __  __          _  ________ _____
+ \ \    / /  ____|  __ \ / ____| |  | |/ ____|  \/  |   /\   | |/ /  ____|  __ \
+  \ \  / /| |__  | |__) | (___ | |  | | (___ | \  / |  /  \  | ' /| |__  | |__) |
+   \ \/ / |  __| |  _  / \___ \| |  | |\___ \| |\/| | / /\ \ |  < |  __| |  _  /
+    \  /  | |____| | \ \ ____) | |__| |____) | |  | |/ ____ \| . \| |____| | \ \
+     \/   |______|_|  \_\_____/ \____/|_____/|_|  |_/_/    \_\_|\_\______|_|  \_\
+
+```
 
 <div>
 
@@ -12,32 +19,39 @@ https://github.com/gusbueno/versusmaker/issues
 
 ---
 
-## 📝 Table of Contents
+## 🗒️ Table of Contents
 
 -   [About](#about)
 -   [Getting Started](#getting_started)
 -   [Usage](#usage)
--   [Built Using](#built_using)
+-   [Built Using](#built_with)
 -   [Authors](#authors)
 
-## About
+## About <a name="about"></a>
 
-`versusmaker` is a simple matchmaker js library
+`versusmaker` is a simple matchmaker and easy-to-use nodejs library.
 
-## Getting Started
+## Getting Started <a name="getting_started"></a>
 
-Install the package with npm
+### Install the package with npm
+
+```shell
+npm install --save versusmaker
+```
+
+### Install the package with yarn
 
 ```shell
 yarn add versusmaker
 ```
 
-## Usage
+## Usage <a name="usage"></a>
 
-## Built with
+## Built with <a name="built_with"></a>
 
 -   [NodeJs](https://nodejs.org/en/)
+-   [uuid](https://github.com/uuidjs/uuid)
 
-## Authors
+## Authors <a name="authors"></a>
 
 -   [@gusbueno](https://github.com/gusbueno)
