@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "versusmaker",
+  "name": "@gusbueno/versusmaker",
   "author": "Gustavo Bueno",
   "module": "dist/versusmaker.esm.js",
   "size-limit": [
@@ -51,5 +51,24 @@
     "tsdx": "^0.14.1",
     "tslib": "^2.5.0",
     "typescript": "^5.0.2"
-  }
+  },
+  "description": "Matchmaking library for multiplayer games",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gusbueno/versusmaker.git"
+  },
+  "keywords": [
+    "matchmaking",
+    "multplayer",
+    "gaming",
+    "matchmaker",
+    "mmr"
+  ],
+  "bugs": {
+    "url": "https://github.com/gusbueno/versusmaker/issues"
+  },
+  "homepage": "https://github.com/gusbueno/versusmaker#readme"
 }
