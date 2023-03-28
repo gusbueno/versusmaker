@@ -12,88 +12,69 @@ interface Match {
 
 export class Matchmaker {
 	public id: string = `matchmaker-${uuid()}`
-	private potentialMatches: Match[] = []
 	constructor(
 		private queue: Queue,
 		private threshold: number,
 		private teamSize: number
 	) {}
 
-	private createMatch(): Match | null {
-		const match: Match = {
-			id: `match-${uuid()}`,
-			teamA: [],
-			teamB: [],
-			isReady: false,
+	public findMatch(player: Player): Match | null {
+		// filter out the player from the queue if they are already present
+		const updatedQueue = this.queue.playersInQueue.filter(
+			p => p.id !== player.id
+		)
+
+		// Add the player to the updated queue
+		updatedQueue.push(player)
+
+		// find potential teammates and opponents for the player
+		const potentialMatchPlayers = updatedQueue.filter(
+			p => Math.abs(p.mmr - player.mmr) <= this.threshold
+		)
+
+		if (potentialMatchPlayers.length < this.teamSize * 2 - 1) {
+			this.queue.addPlayersToQueue([player])
+			return null // not enough players to fill two teams
 		}
 
-		for (const playerA of this.queue.playersInQueue) {
-			for (const playerB of this.queue.playersInQueue) {
-				if (
-					playerA.id !== playerB.id &&
-					Math.abs(playerA.mmr - playerB.mmr) <= this.threshold
-				) {
-					match.teamA.push(playerA)
-					match.teamB.push(playerB)
-					this.queue.removePlayersFromQueue([playerA.id, playerB.id])
-					this.potentialMatches.push(match)
+		const { match, selectedPlayerIds } = potentialMatchPlayers.reduce<{
+			match: Match
+			selectedPlayerIds: string[]
+		}>(
+			(acc, matchPlayer) => {
+				if (acc.match.teamA.length < this.teamSize) {
+					acc.match.teamA.push(matchPlayer)
+					acc.selectedPlayerIds.push(matchPlayer.id)
+				} else if (acc.match.teamB.length < this.teamSize) {
+					acc.match.teamB.push(matchPlayer)
+					acc.selectedPlayerIds.push(matchPlayer.id)
 				}
+
+				return acc
+			},
+			{
+				match: {
+					id: `match-${uuid()}`,
+					teamA: [player],
+					teamB: [],
+					isReady: false,
+				},
+				selectedPlayerIds: [],
 			}
-		}
+		)
 
 		if (
 			match.teamA.length === this.teamSize &&
 			match.teamB.length === this.teamSize
 		) {
+			// we got a match!
+			// so we remove the selected players from the queue
+			this.queue.removePlayersFromQueue(selectedPlayerIds)
 			match.isReady = true
 			return match
 		}
 
-		this.potentialMatches.push(match)
-		return null
-	}
-
-	public findMatch(): Match | null {
-		if (this.potentialMatches.length === 0) {
-			return this.createMatch()
-		}
-
-		for (const match of this.potentialMatches) {
-			const unmatchedPlayers = this.queue.playersInQueue.filter(
-				player =>
-					!match.teamA.includes(player) &&
-					!match.teamB.includes(player)
-			)
-
-			for (const unmatchedPlayer of unmatchedPlayers) {
-				if (
-					match.teamA.length < this.teamSize &&
-					this.isPlayerWithinThreshold(match.teamA, unmatchedPlayer)
-				) {
-					match.teamA.push(unmatchedPlayer)
-				} else if (
-					match.teamB.length < this.teamSize &&
-					this.isPlayerWithinThreshold(match.teamB, unmatchedPlayer)
-				) {
-					match.teamB.push(unmatchedPlayer)
-				}
-			}
-
-			if (
-				match.teamA.length === this.teamSize &&
-				match.teamB.length === this.teamSize
-			) {
-				match.isReady = true
-				return match
-			}
-		}
-
-		return null
-	}
-
-	private isPlayerWithinThreshold(team: Player[], player: Player): boolean {
-		return team.every(
-			teammate => Math.abs(teammate.mmr - player.mmr) <= this.threshold
-		)
+		this.queue.addPlayersToQueue([player])
+		return null // unable to find a suitable match
 	}
 }
