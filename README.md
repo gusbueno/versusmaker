@@ -92,7 +92,7 @@ queue.addPlayersToQueue([player1, player2])
 -   Remove player from queue
 
 ```typescript
-// if, for example, a player that was in queue disconnect from your game
+// if, for example, a player that was in queue disconnects from your game
 // you can remove that player from the queue just by passing an array of player ids
 const queue = new Queue()
 const matchmaker = new Matchmaker(queue, 100, 5)
@@ -100,7 +100,7 @@ const myOwnPlayerId = '1'
 const myOwnPlayerMMR = 2102
 const player = new Player(myOwnPlayerId, myOwnPlayerMMR)
 // we try to find a match for that player
-const match = matchmaker.findMatch()
+const match = matchmaker.findMatch(player)
 // returns null because it didn't find a match for that player
 // so the player is automatically added in the queue
 
